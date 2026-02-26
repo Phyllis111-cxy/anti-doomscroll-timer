@@ -1,28 +1,5 @@
-// === Reflection modal elements (make sure IDs match your HTML) ===
-const reflectionOverlay = document.getElementById("reflectionOverlay");
-const reflectionModal = document.getElementById("reflectionModal");
-const reflectionInput = document.getElementById("reflectionInput");
-const reflectionSave = document.getElementById("reflectionSave");
-const reflectionSkip = document.getElementById("reflectionSkip");
-
-function closeReflection() {
-  if (reflectionOverlay) reflectionOverlay.style.display = "none";
-  if (reflectionModal) reflectionModal.style.display = "none";
-  if (reflectionInput) reflectionInput.value = "";
-}
-if (reflectionSkip) {
-  reflectionSkip.addEventListener("click", closeReflection);
-}
-
-if (reflectionSave) {
-  reflectionSave.addEventListener("click", () => {
-    // 如果你本来有保存note的逻辑，就放这里
-    // 比如：saveNote(reflectionInput.value)
-    closeReflection();
-  });
-}
 // app.js
-// Anti-Doomscroll Timer (Strong Mode) — pure frontend, GitHub Pages ready.
+// Anti-Doomscroll Timer (No Reflection Modal) — pure frontend, GitHub Pages ready.
 
 const appEl = document.getElementById("app");
 const todayEl = document.getElementById("today");
@@ -44,11 +21,6 @@ const applyBtn = document.getElementById("applyBtn");
 const pomCountEl = document.getElementById("pomCount");
 const disCountEl = document.getElementById("disCount");
 const notesEl = document.getElementById("notes");
-
-const modal = document.getElementById("modal");
-const noteInput = document.getElementById("noteInput");
-const saveNoteBtn = document.getElementById("saveNoteBtn");
-const skipNoteBtn = document.getElementById("skipNoteBtn");
 
 // ---------- Storage helpers ----------
 function todayKey() {
@@ -97,27 +69,17 @@ function renderStats() {
   pomCountEl.textContent = state.pomodoros;
   disCountEl.textContent = state.distractions;
 
-  if (!state.notes || state.notes.length === 0) {
-    notesEl.textContent = "No notes yet. (That’s okay.)";
-  } else {
-    notesEl.textContent = state.notes
-      .slice(-8)
-      .map((n) => `• ${n}`)
-      .join("\n");
-  }
+  // Notes disabled in this version
+  notesEl.textContent = "Notes disabled in this version.";
 }
 
 function setModeUI() {
-  // Body class for visuals
-  appEl.classList.toggle("focus-on", isFocus);
-  appEl.classList.toggle("break-on", !isFocus);
-
   modeEl.textContent = isFocus ? "FOCUS" : "BREAK";
   hintEl.textContent = isFocus
     ? "No scrolling. One task. Right now."
     : "Break time. Breathe. Small reward is okay.";
 
-  // In strong mode: show distract button only during focus
+  // Strong mode: distract button only during running focus
   distractBtn.disabled = !isFocus || !isRunning;
   distractBtn.style.opacity = (!isFocus || !isRunning) ? 0.45 : 1;
 }
@@ -170,13 +132,10 @@ function startTimer() {
     if (remaining > 0) {
       remaining -= 1;
       renderTime();
-
-      // small warning when near end of focus
       if (isFocus && remaining === 10) beep(660, 90);
     } else {
       // switch mode
       if (isFocus) {
-        // completed a pomodoro
         state.pomodoros += 1;
         saveState(state);
         renderStats();
@@ -218,22 +177,12 @@ applyBtn.addEventListener("click", () => {
   focusSeconds = f * 60;
   breakSeconds = b * 60;
 
-  // Do not auto reset running session; user chooses.
   hintEl.textContent = isFocus
     ? "Updated settings. Hit Reset to restart with new times."
     : "Updated settings. Next break/focus will use the new times.";
 });
 
-// ---------- Distraction flow ----------
-function openModal() {
-  modal.hidden = false;
-  noteInput.value = "";
-  noteInput.focus();
-}
-function closeModal() {
-  modal.hidden = true;
-}
-
+// ---------- Distraction (NO modal) ----------
 distractBtn.addEventListener("click", () => {
   if (!isRunning || !isFocus) return;
 
@@ -243,34 +192,14 @@ distractBtn.addEventListener("click", () => {
 
   // Strong feedback
   beep(220, 120);
-  openModal();
-});
 
-saveNoteBtn.addEventListener("click", () => {
-  const txt = noteInput.value.trim();
-  if (txt) {
-    state.notes = state.notes || [];
-    const stamp = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-    state.notes.push(`${stamp} — ${txt}`);
-    saveState(state);
-    renderStats();
-  }
-  closeModal();
-});
-
-skipNoteBtn.addEventListener("click", () => {
-  closeModal();
-});
-
-// Close modal on background click
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) closeModal();
+  // Tiny feedback message (optional)
+  hintEl.textContent = "Distraction logged. Back to one task.";
 });
 
 // Keyboard shortcuts (optional)
 document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !modal.hidden) closeModal();
-  if (e.key === " " && modal.hidden) {
+  if (e.key === " " ) {
     e.preventDefault();
     if (isRunning) stopTimer(); else startTimer();
   }
