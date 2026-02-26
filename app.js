@@ -1,3 +1,26 @@
+// === Reflection modal elements (make sure IDs match your HTML) ===
+const reflectionOverlay = document.getElementById("reflectionOverlay");
+const reflectionModal = document.getElementById("reflectionModal");
+const reflectionInput = document.getElementById("reflectionInput");
+const reflectionSave = document.getElementById("reflectionSave");
+const reflectionSkip = document.getElementById("reflectionSkip");
+
+function closeReflection() {
+  if (reflectionOverlay) reflectionOverlay.style.display = "none";
+  if (reflectionModal) reflectionModal.style.display = "none";
+  if (reflectionInput) reflectionInput.value = "";
+}
+if (reflectionSkip) {
+  reflectionSkip.addEventListener("click", closeReflection);
+}
+
+if (reflectionSave) {
+  reflectionSave.addEventListener("click", () => {
+    // 如果你本来有保存note的逻辑，就放这里
+    // 比如：saveNote(reflectionInput.value)
+    closeReflection();
+  });
+}
 // app.js
 // Anti-Doomscroll Timer (Strong Mode) — pure frontend, GitHub Pages ready.
 
