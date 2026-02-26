@@ -1,0 +1,95 @@
+<!-- index.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anti-Doomscroll Timer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app" id="app">
+    <header class="top">
+      <div>
+        <h1>Anti-Doomscroll Timer</h1>
+        <p class="sub">Focus first. Scroll later.</p>
+      </div>
+      <div class="meta">
+        <div id="today" class="pill"></div>
+        <button id="soundBtn" class="pill ghost" aria-label="Toggle sound">🔊 Sound: ON</button>
+      </div>
+    </header>
+
+    <section class="hero" aria-live="polite">
+      <div class="mode" id="mode">FOCUS</div>
+      <div class="time" id="time">25:00</div>
+      <div class="hint" id="hint">No scrolling. One task. Right now.</div>
+    </section>
+
+    <section class="controls">
+      <button id="startBtn" class="btn primary">Start</button>
+      <button id="pauseBtn" class="btn">Pause</button>
+      <button id="resetBtn" class="btn danger">Reset</button>
+
+      <div class="spacer"></div>
+
+      <button id="distractBtn" class="btn warn">I got distracted</button>
+    </section>
+
+    <section class="settings">
+      <div class="card">
+        <h2>Session Settings</h2>
+        <div class="row">
+          <label>Focus (min)
+            <input id="focusMin" type="number" min="1" max="120" value="25" />
+          </label>
+          <label>Break (min)
+            <input id="breakMin" type="number" min="1" max="60" value="5" />
+          </label>
+          <button id="applyBtn" class="btn small">Apply</button>
+        </div>
+        <p class="smallnote">Tip: change minutes, click Apply, then Reset to restart cleanly.</p>
+      </div>
+
+      <div class="card">
+        <h2>Today Stats</h2>
+        <div class="stats">
+          <div class="stat">
+            <div class="statNum" id="pomCount">0</div>
+            <div class="statLabel">Pomodoros</div>
+          </div>
+          <div class="stat">
+            <div class="statNum" id="disCount">0</div>
+            <div class="statLabel">Distractions</div>
+          </div>
+        </div>
+        <div class="logWrap">
+          <h3>Distraction Notes (optional)</h3>
+          <div id="notes" class="notes"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal for distraction note -->
+    <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+      <div class="modalCard">
+        <h2 id="modalTitle">Quick Reflection</h2>
+        <p class="sub">What were you about to scroll for? (1 short phrase)</p>
+        <input id="noteInput" type="text" maxlength="60" placeholder="e.g., 'check TikTok for 2 minutes'" />
+        <div class="modalBtns">
+          <button id="saveNoteBtn" class="btn primary small">Save</button>
+          <button id="skipNoteBtn" class="btn small">Skip</button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p class="smallnote">
+        Built for behavior awareness — it can’t block other apps, but it makes distractions visible.
+      </p>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
